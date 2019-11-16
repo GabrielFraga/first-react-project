@@ -1,10 +1,12 @@
+/* eslint-disable react/state-in-constructor */
+/* eslint-disable react/static-property-placement */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import api from '../../services/api';
 
 import Container from '../../components/Container';
-import { Loading, Owner, IssueList } from './styles';
+import { Loading, Owner, IssueList, Filter } from './styles';
 
 export default class Repository extends Component {
   static propTypes = {
@@ -18,10 +20,19 @@ export default class Repository extends Component {
   state = {
     repository: {},
     issues: [],
+    repoState: 'open',
+    repoStates: ['open', 'all', 'closed'],
     loading: true,
   };
 
   async componentDidMount() {
+    // if (repo) {
+    //   this.setState({
+    //     repoState: repo,
+    //   });
+    // }
+
+    const { repoState } = this.state;
     const { match } = this.props;
     const repoName = decodeURIComponent(match.params.repository);
 
@@ -29,7 +40,7 @@ export default class Repository extends Component {
       api.get(`/repos/${repoName}`),
       api.get(`/repos/${repoName}/issues`, {
         params: {
-          state: 'open',
+          state: repoState,
           per_page: 5,
         },
       }),
@@ -41,8 +52,13 @@ export default class Repository extends Component {
     });
   }
 
+  changeRepoState = async e => {
+    await this.setState({ repoState: e.target.value });
+    this.componentDidMount();
+  };
+
   render() {
-    const { repository, issues, loading } = this.state;
+    const { repository, issues, loading, repoStates } = this.state;
 
     if (loading) {
       return <Loading>Carregando</Loading>;
@@ -56,7 +72,21 @@ export default class Repository extends Component {
           <h1>{repository.name}</h1>
           <p>{repository.description}</p>
         </Owner>
-
+        <Filter>
+          <h3>Filter the state of repositories</h3>
+          <ul>
+            {repoStates.map(state => (
+              <button
+                key={String.state}
+                type="submit"
+                onClick={this.changeRepoState}
+                value={state}
+              >
+                {state}
+              </button>
+            ))}
+          </ul>
+        </Filter>
         <IssueList>
           {issues.map(issue => (
             <li key={String(issue.id)}>

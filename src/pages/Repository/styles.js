@@ -97,3 +97,39 @@ export const IssueList = styled.ul`
     }
   }
 `;
+
+export const Filter = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  h3 {
+    margin-top: 20px;
+  }
+
+  ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+
+    button {
+      background: #7159c1;
+      border: 0;
+      padding: 0 15px;
+      margin-left: 10px;
+      margin-top: 15px;
+      border-radius: 4px;
+      list-style: none;
+      height: 50px;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      color: #fff;
+      cursor: pointer;
+    }
+  }
+`;
