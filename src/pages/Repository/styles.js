@@ -133,3 +133,35 @@ export const Filter = styled.div`
     }
   }
 `;
+
+export const PageSelector = styled.button.attrs(props => ({
+  type: 'submit',
+  disabled: props.page,
+}))`
+  background: #7159c1;
+  border: 0;
+  padding: 0 15px;
+  margin-left: 10px;
+  margin-top: 15px;
+  border-radius: 4px;
+  list-style: none;
+  height: 50px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: #fff;
+  cursor: pointer;
+
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+`;
+
+export const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;

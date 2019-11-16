@@ -6,7 +6,14 @@ import PropTypes from 'prop-types';
 import api from '../../services/api';
 
 import Container from '../../components/Container';
-import { Loading, Owner, IssueList, Filter } from './styles';
+import {
+  Loading,
+  Owner,
+  IssueList,
+  Filter,
+  PageSelector,
+  ButtonContainer,
+} from './styles';
 
 export default class Repository extends Component {
   static propTypes = {
@@ -22,17 +29,12 @@ export default class Repository extends Component {
     issues: [],
     repoState: 'open',
     repoStates: ['open', 'all', 'closed'],
+    page: 1,
     loading: true,
   };
 
   async componentDidMount() {
-    // if (repo) {
-    //   this.setState({
-    //     repoState: repo,
-    //   });
-    // }
-
-    const { repoState } = this.state;
+    const { page, repoState } = this.state;
     const { match } = this.props;
     const repoName = decodeURIComponent(match.params.repository);
 
@@ -42,6 +44,7 @@ export default class Repository extends Component {
         params: {
           state: repoState,
           per_page: 5,
+          page,
         },
       }),
     ]);
@@ -57,8 +60,19 @@ export default class Repository extends Component {
     this.componentDidMount();
   };
 
+  changePage = async e => {
+    if (e.target.value === 'back') {
+      await this.setState({ page: this.state.page - 1 });
+      console.log(this.state.page);
+    } else {
+      await this.setState({ page: this.state.page + 1 });
+      console.log(this.state.page);
+    }
+    this.componentDidMount();
+  };
+
   render() {
-    const { repository, issues, loading, repoStates } = this.state;
+    const { repository, issues, loading, repoStates, page } = this.state;
 
     if (loading) {
       return <Loading>Carregando</Loading>;
@@ -103,6 +117,18 @@ export default class Repository extends Component {
             </li>
           ))}
         </IssueList>
+        <ButtonContainer>
+          <PageSelector
+            value="back"
+            page={page === 1}
+            onClick={this.changePage}
+          >
+            Back
+          </PageSelector>
+          <PageSelector value="next" onClick={this.changePage}>
+            Next
+          </PageSelector>
+        </ButtonContainer>
       </Container>
     );
   }
